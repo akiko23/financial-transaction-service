@@ -1,0 +1,105 @@
+[project]
+name = "aezakmi_task"
+version = "0.1.0"
+description = "A transaction analyze service with FastAPI and AI integration"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "alembic>=1.15.1",
+    "asyncpg>=0.30.0",
+    "cachetools>=5.5.2",
+    "catboost>=1.2.7",
+    "celery>=5.4.0",
+    "dishka>=1.5.0",
+    "fastapi==0.112",
+    "greenlet>=3.1.1",
+    "httpx>=0.28.1",
+    "isort>=6.0.1",
+    "jinja2>=3.1.6",
+    "prometheus-client>=0.21.1",
+    "pypdf2>=3.0.1",
+    "pytest>=8.3.5",
+    "pytest-asyncio>=0.26.0",
+    "python-multipart>=0.0.20",
+    "redis>=5.2.1",
+    "ruff>=0.11.2",
+    "sqlalchemy>=2.0.39",
+    "toml>=0.10.2",
+    "uvicorn>=0.34.0",
+    "websockets>=15.0.1",
+]
+
+
+[tool.ruff]
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".bzr",
+    ".idea",
+    ".git",
+    ".mypy_cache",
+    ".ruff_cache",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "build",
+    "dist",
+    "venv",
+    "*/migrations/versions",
+]
+
+line-length = 105
+indent-width = 4
+
+# Assume Python 3.11
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "C", "W"]
+ignore = []
+
+# Allow fix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+unfixable = []
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+pydocstyle.convention = "pep257"
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+docstring-code-line-length = "dynamic"
+
+[tool.ruff.lint.flake8-quotes]
+docstring-quotes = "double"
+
+
+# Isort configuration
+[tool.isort]
+include_trailing_comma = true
+use_parentheses = true
+multi_line_output = 3
+line_length = 105
+
+
+[tool.pytest.ini_options]
+testpaths = [
+    "tests",
+]
+pythonpath = [
+    "."
+]
+# Suppress specific warnings
+filterwarnings = [
+    # Suppress PytestDeprecationWarning about asyncio_default_fixture_loop_scope being unset
+    "ignore:The configuration option \"asyncio_default_fixture_loop_scope\" is unset:DeprecationWarning",
+    # Suppress DeprecationWarning about no current event loop
+    "ignore:There is no current event loop:DeprecationWarning",
+    # Suppress DeprecationWarning about redefining the event_loop fixture
+    "ignore:The event_loop fixture provided by pytest-asyncio has been redefined:DeprecationWarning"
+]
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
