@@ -23,6 +23,8 @@ class TransactionResponse(BaseModel):
     deposit: Decimal
     processing_status: str
     category: str | None
+    created_at: datetime
+    expediency: int | None
 
 
 class ManyTransactionsResponse(BaseModel):

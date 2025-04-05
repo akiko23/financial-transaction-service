@@ -1,10 +1,11 @@
 import uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List, Optional, Protocol
 from uuid import UUID
 from io import BytesIO
 
 from transaction_service.models import Transaction
+from transaction_service.models.transaction import EditedTransaction
 from transaction_service.schemas.transaction import (
     TransactionCreate,
     TransactionResponse,
@@ -36,10 +37,27 @@ class TransactionGateway(Protocol):
     ) -> tuple[List[Transaction], int]:
         raise NotImplementedError
 
+    async def get_avg_withdrawal_by_category(self, user_id: UUID, category: str):
+        raise NotImplementedError
+
+    async def get_oldest_ts(self, user_id: UUID):
+        raise NotImplementedError
+
+    async def save(self, transaction: Transaction):
+        raise NotImplementedError
+
+    async def add_edited(self, transaction: EditedTransaction):
+        raise NotImplementedError
+
+    async def get_all_edited(self):
+        raise NotImplementedError
 
 
 class TransactionAnalyzer(Protocol):
     def analyze(self, transaction_id: UUID):
+        raise NotImplementedError
+
+    def fit_model(self):
         raise NotImplementedError
 
 
@@ -53,6 +71,7 @@ class TransactionService:
     ) -> TransactionResponse:
         new_transaction = await self.repository.create(transaction)
         self.financial_category_analyzer.analyze(new_transaction.id)
+
         return TransactionResponse.model_validate(new_transaction)
 
     async def get_transaction(self, transaction_id: UUID) -> Optional[TransactionResponse]:
@@ -69,6 +88,9 @@ class TransactionService:
     ) -> ManyTransactionsResponse:
         dict_transactions = self._parse_account_stmt(pdf_file, user_id=user_id, bank=bank)
         await self.repository.create_account_stmt(dict_transactions)
+
+        for ts in dict_transactions:
+            self.financial_category_analyzer.analyze(ts['id'])
 
         return ManyTransactionsResponse(
             total=len(dict_transactions),
@@ -138,6 +160,8 @@ class TransactionService:
                     'deposit': Decimal(),
                     'processing_status': 'in_progress',
                     'category': None,
+                    'expediency': 0,
+                    'created_at': datetime.now(),
                 }
 
                 processed_amount = match[2].replace(' i', '')
@@ -149,6 +173,40 @@ class TransactionService:
                 res.append(data)
             return res
         raise NotImplementedError
+
+    async def update_ts_category(self, transaction_id: UUID, category: str):
+        ts = await self.repository.get(transaction_id)
+        if ts is None:
+            return None
+
+        ts.category = category
+        avg = await self.repository.get_avg_withdrawal_by_category(
+            user_id=ts.user_id,
+            category=ts.category,
+        )
+
+        coef = (ts.withdraw - avg) / avg
+        if coef > 20:
+            coef = 5
+        elif coef > 10:
+            coef = 3
+        elif coef > 5:
+            coef = 2
+        else:
+            coef = 1
+
+        await self.repository.save(ts)
+
+        await self.repository.add_edited(transaction=EditedTransaction(
+            id=ts.id,
+            user_id=ts.user_id,
+            entry_date =ts.receipt_date,
+            receipt_date = ts.receipt_date,
+            withdraw=ts.withdraw,
+            deposit=ts.deposit,
+            created_at=ts.created_at,
+        ))
+        await self.financial_category_analyzer.fit_model()
 
     @staticmethod
     def _date_from_str(date_str: str):

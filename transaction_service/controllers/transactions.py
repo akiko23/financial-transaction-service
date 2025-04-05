@@ -4,7 +4,7 @@ from uuid import UUID
 
 from dishka import FromDishka
 from dishka.integrations.fastapi import DishkaRoute
-from fastapi import APIRouter, HTTPException, status, Query, Header, UploadFile
+from fastapi import APIRouter, HTTPException, status, Query, UploadFile
 from fastapi.responses import Response
 from redis.asyncio import Redis
 
@@ -27,10 +27,6 @@ async def create_transaction(
         service: FromDishka[TransactionService]
 ):
     new_transaction = await service.create_transaction(transaction)
-    # await send_new_notification_to_user(
-    #     user_id=str(transaction.user_id),
-    #     notification=db_notification
-    # )
     return Response(
         status_code=status.HTTP_201_CREATED,
         content=new_transaction.model_dump_json(indent=4)
@@ -57,15 +53,9 @@ async def create_transaction(
     return user_transactions
 
 
-# async def send_new_notification_to_user(user_id: str, notification: TransactionResponse):
-#     if user_id in websocket_connections:
-#         for websocket in websocket_connections[user_id]:
-#             await websocket.send_json(notification.model_dump(mode='json'))
-
-
 @router.post("/transactions/load-account-statement/")
 async def process_account_statement(
-        user_id: Annotated[UUID, Header()],
+        user_id: Annotated[UUID, Query(...)],
         bank: Annotated[str, Query(...)],
         file: UploadFile,
         service: FromDishka[TransactionService]
@@ -88,50 +78,10 @@ async def get_transaction(
     return transaction
 
 
-#
-# @router.websocket("/ws")
-# async def websocket_endpoint(
-#         websocket: WebSocket,
-#         user_id: str = Query(...),
-# ):
-#     await websocket.accept()
-#     if user_id not in websocket_connections:
-#         websocket_connections[user_id] = []
-#     websocket_connections[user_id].append(websocket)
-#
-#     try:
-#         while True:
-#             # Держим соединение открытым
-#             await websocket.receive_text()
-#     except Exception as e:
-#         print(e)
-#         websocket_connections[user_id].remove(websocket)
-#         if not websocket_connections[user_id]:
-#             del websocket_connections[user_id]
-#     finally:
-#         with suppress(RuntimeError):
-#             await websocket.close()
-#
-#
-# websocket_connections = {}
-
-
-# /api/v1/load-account-statement?bank=tinkoff
-# UserToken (headers)
-# [POST] {'pdf': File}
-# Response: [{'date': Date, 'type': Deposit|Withdraw}]
-
-# /api/v1/analyze-all
-# [POST] No Params
-# UserToken (headers)
-# Response:  [{'category': Category}]
-
-# /api/v1/analyze
-# UserToken (headers)
-# [POST] {'date': Date, 'category': Category, ''
-# 'withdraw': int, 'deposit': int, 'balance': int}
-# Response: {'id': uuid, 'category': Category}
-
-# /api/v1/chat
-# [WebSocket]
-# UserToken (headers)
+@router.patch("/transactions/{transaction_id}", response_model=TransactionResponse)
+async def update_transaction_category(
+        transaction_id: UUID,
+        category: str,
+        service: FromDishka[TransactionService]
+):
+    await service.update_ts_category(transaction_id, category)
