@@ -1,0 +1,98 @@
+services:
+  transaction_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: "transaction_service-transaction_service"
+    environment:
+      TRANSACTION_ANALYZER_CONFIG_PATH: "./configs/app.docker.toml"
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  ai_analyzer_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: "transaction_service-ai_analyzer_service"
+    environment:
+      TRANSACTION_ANALYZER_CONFIG_PATH: "./configs/app.docker.toml"
+    command: "uv run celery -A transaction_service.tasks.ai_tasks worker --loglevel=info"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  db_migrations:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: "transaction_service-db_migrations"
+    environment:
+      TRANSACTION_ANALYZER_CONFIG_PATH: "./configs/app.docker.toml"
+    command: "uv run alembic upgrade head"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16.0-alpine3.18
+    container_name: "transaction_service-db"
+    env_file:
+      - configs/db.env
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U user -d mydb" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+  redis:
+    image: redis:7.2.4-alpine
+    container_name: "transaction_service-redis"
+    ports:
+      - "127.0.0.1:6379:6379"
+    restart: "unless-stopped"
+    volumes:
+      - "./configs/:/usr/local/etc/redis"
+      - redis_data:/data
+    command: "redis-server /usr/local/etc/redis/redis.conf"
+
+  prometheus:
+    image: prom/prometheus
+    container_name: "transaction_service-prometheus"
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus_data/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    restart: unless-stopped
+
+
+  grafana:
+    image: grafana/grafana
+    container_name: "transaction_service-grafana"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana/dashboard.yaml:/etc/grafana/provisioning/dashboards/main.yaml
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+      - ./grafana/provisioning/datasources/:/etc/grafana/provisioning/datasources/
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
