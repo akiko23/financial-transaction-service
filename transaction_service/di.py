@@ -18,7 +18,7 @@ from transaction_service.tasks.ai_tasks import AIRemoteTransactionAnalyzer
 def config_provider() -> Provider:
     provider = Provider()
 
-    cfg_path = os.getenv('TRANSACTION_ANALYZER_CONFIG_PATH', './configs/app.toml')
+    cfg_path = os.getenv('TRANSACTION_SERVICE_CONFIG_PATH', './configs/app.toml')
     provider.provide(lambda: load_config(cfg_path), scope=Scope.APP, provides=Config)
     return provider
 

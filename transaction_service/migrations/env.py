@@ -10,7 +10,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from transaction_service.config import load_config
 from transaction_service.models import *  # noqa
 
-app_cfg = load_config(config_path=os.getenv("TRANSACTION_ANALYZER_CONFIG_PATH", './configs/app.toml'))
+app_cfg = load_config(config_path=os.getenv("TRANSACTION_SERVICE_CONFIG_PATH", './configs/app.toml'))
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

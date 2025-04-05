@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     container_name: "transaction_service-transaction_service"
     environment:
-      TRANSACTION_ANALYZER_CONFIG_PATH: "./configs/app.docker.toml"
+      TRANSACTION_SERVICE_CONFIG_PATH: "./configs/app.docker.toml"
     ports:
       - "8000:8000"
     depends_on:
@@ -20,7 +20,7 @@ services:
       dockerfile: Dockerfile
     container_name: "transaction_service-ai_analyzer_service"
     environment:
-      TRANSACTION_ANALYZER_CONFIG_PATH: "./configs/app.docker.toml"
+      TRANSACTION_SERVICE_CONFIG_PATH: "./configs/app.docker.toml"
     command: "uv run celery -A transaction_service.tasks.ai_tasks worker --loglevel=info"
     depends_on:
       db:
@@ -34,7 +34,7 @@ services:
       dockerfile: Dockerfile
     container_name: "transaction_service-db_migrations"
     environment:
-      TRANSACTION_ANALYZER_CONFIG_PATH: "./configs/app.docker.toml"
+      TRANSACTION_SERVICE_CONFIG_PATH: "./configs/app.docker.toml"
     command: "uv run alembic upgrade head"
     depends_on:
       db:
