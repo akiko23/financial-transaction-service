@@ -13,7 +13,7 @@ from transaction_service.services.ai_service import analyze_text
 from transaction_service.utils.metrics import TOTAL_MESSAGES_PRODUCED
 
 cfg = load_config(os.getenv('TRANSACTION_SERVICE_CONFIG_PATH', './configs/app.toml'))
-celery_app = Celery('tasks', broker=cfg.redis.uri)
+celery_app = Celery('tasks', broker=cfg.rabbitmq.uri)
 
 
 class DatabaseProvider(Provider):

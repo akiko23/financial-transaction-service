@@ -13,10 +13,12 @@ TOTAL_MESSAGES_PRODUCED = Counter(
 CREATE_TRANSACTION_METHOD_DURATION = Histogram(
     'create_transaction_duration_seconds',
     'Time spent in creating transaction',
+    buckets=(0.01, 0.05, 0.1, 0.5, 1.0, 2.0, 5.0, 10.0, float('inf'))
 )
 GET_ALL_TRANSACTIONS_METHOD_DURATION = Histogram(
     'get_all_transactions_duration_seconds',
     'Measure time of getting all transactions from database',
+    buckets=(0.01, 0.05, 0.1, 0.5, 1.0, 2.0, 5.0, 10.0, float('inf'))
 )
 
 

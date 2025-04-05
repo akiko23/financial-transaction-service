@@ -30,9 +30,23 @@ class RedisConfig:
 
 
 @dataclass
+class RabbitmqConfig:
+    host: str
+    port: int
+    user: str
+    password: str
+
+    def __post_init__(self) -> None:
+        self.uri = (
+            f"amqp://{self.user}:{self.password}@{self.host}:{self.port}/"
+        )
+
+
+@dataclass
 class Config:
     db: DatabaseConfig
     redis: RedisConfig
+    rabbitmq: RabbitmqConfig
 
 
 def load_config(config_path: str) -> Config:
@@ -41,4 +55,5 @@ def load_config(config_path: str) -> Config:
     return Config(
         db=DatabaseConfig(**data["db"]),
         redis=RedisConfig(**data["redis"]),
+        rabbitmq=RabbitmqConfig(**data["rabbitmq"]),
     )
