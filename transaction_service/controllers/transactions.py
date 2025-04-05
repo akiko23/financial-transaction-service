@@ -84,4 +84,5 @@ async def update_transaction_category(
         category: str,
         service: FromDishka[TransactionService]
 ):
-    await service.update_ts_category(transaction_id, category)
+    res = await service.update_ts_category(transaction_id, category)
+    return res

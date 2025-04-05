@@ -135,11 +135,11 @@ class TransactionService:
                 amount_float = float(amount.replace(' ', ''))
                 balance_list.append(amount_float)
 
-            balance_on_start, balance_on_end = balance_list
+            balance_on_start, balance_on_end = map(lambda x: Decimal(x), balance_list)
             print(balance_on_start, balance_on_end)
 
             # pattern = r'(\d{2}\.\d{2}\.\d{2})*'
-            transactions_pattern = r'(\d{2}\.\d{2}\.\d{2})\s*(?:\d{2}:\d{2})?\s+(\d{2}\.\d{2}\.\d{2})\s+([+-]?\s*\d+(?:\.\d+)?\s*i)'
+            transactions_pattern = r'(\d{2}\.\d{2}\.\d{2})\s*(?:\d{2}:\d{2})?\s+(\d{2}\.\d{2}\.\d{2})\s+([+-]?\s*\d+(?:\s*\d{3})*(?:\.\d+)?\s*i)'
 
             # Получаем список всех совпадений
             matches = re.findall(transactions_pattern, full_text, re.MULTILINE)
@@ -147,10 +147,13 @@ class TransactionService:
             # matches содержит список кортежей с захваченными группами
 
             res = []
+            sum_wdraw = 0
+            sum_dep = 0
             for match in matches:
                 print(match, match[0], match[1])
                 entry_date = self._date_from_str(match[0])
                 receipt_date = self._date_from_str(match[1])
+
                 data = {
                     'id': uuid.uuid4(),
                     'entry_date': entry_date,
@@ -166,12 +169,19 @@ class TransactionService:
 
                 processed_amount = match[2].replace(' i', '')
                 if "+" in processed_amount:
-                    data['deposit'] = Decimal(processed_amount.replace("+ ", ""))
+                    data['deposit'] = Decimal(processed_amount.replace("+ ", "").replace(" ", ""))
                 else:
-                    data['withdraw'] = Decimal(processed_amount)
+                    data['withdraw'] = Decimal(processed_amount.replace(" ", ""))
 
+                balance_on_start += data['deposit'] - data['withdraw']
+                data['balance'] = balance_on_start
+
+                sum_wdraw += data['deposit']
+                sum_dep += data['withdraw']
                 res.append(data)
+
             return res
+
         raise NotImplementedError
 
     async def update_ts_category(self, transaction_id: UUID, category: str):
@@ -184,19 +194,19 @@ class TransactionService:
             user_id=ts.user_id,
             category=ts.category,
         )
-
-        coef = (ts.withdraw - avg) / avg
-        if coef > 20:
-            coef = 5
-        elif coef > 10:
-            coef = 3
-        elif coef > 5:
-            coef = 2
-        else:
-            coef = 1
+        if avg is not None:
+            coef = (ts.withdraw - avg) / avg
+            if coef > 20:
+                coef = 5
+            elif coef > 10:
+                coef = 3
+            elif coef > 5:
+                coef = 2
+            else:
+                coef = 1
+            ts.expediency = coef
 
         await self.repository.save(ts)
-
         await self.repository.add_edited(transaction=EditedTransaction(
             id=ts.id,
             user_id=ts.user_id,
@@ -204,9 +214,12 @@ class TransactionService:
             receipt_date = ts.receipt_date,
             withdraw=ts.withdraw,
             deposit=ts.deposit,
-            created_at=ts.created_at,
+            created_at=datetime.now(),
+            new_category=category,
+            balance=ts.balance,
         ))
-        await self.financial_category_analyzer.fit_model()
+        self.financial_category_analyzer.fit_model()
+        return TransactionResponse.model_validate(ts)
 
     @staticmethod
     def _date_from_str(date_str: str):

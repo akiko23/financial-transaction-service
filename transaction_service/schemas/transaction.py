@@ -9,6 +9,7 @@ class TransactionCreate(BaseModel):
     entry_date: datetime = datetime.now()
     receipt_date: datetime = datetime.now()
     withdraw: Decimal
+    balance: Decimal
     deposit: Decimal
 
 
@@ -23,6 +24,7 @@ class TransactionResponse(BaseModel):
     deposit: Decimal
     processing_status: str
     category: str | None
+    balance: Decimal
     created_at: datetime
     expediency: int | None
 

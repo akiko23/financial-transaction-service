@@ -9,7 +9,10 @@ from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 
 from transaction_service.config import load_config
 from transaction_service.repositories.transaction_repository import TransactionRepository
-from transaction_service.services.ai_service import analyze_text
+import pandas as pd
+from catboost import CatBoostClassifier
+
+from transaction_service.services.ai_service import predict, fit_model
 from transaction_service.utils.metrics import TOTAL_MESSAGES_PRODUCED
 
 cfg = load_config(os.getenv('TRANSACTION_SERVICE_CONFIG_PATH', './configs/app.toml'))
@@ -33,6 +36,10 @@ class DatabaseProvider(Provider):
         async with sessionmaker() as session:
             yield session
 
+    @provide(scope=Scope.APP)
+    async def get_model(self) -> CatBoostClassifier:
+        return CatBoostClassifier().load_model('model.cbm')
+
 
 container = make_async_container(DatabaseProvider())
 
@@ -45,6 +52,7 @@ def run_async(coro):
 @celery_app.task
 def process_transaction_analysis(transaction_id: UUID):
     async def inner():
+        model = await container.get(CatBoostClassifier)
         async with container() as request_container:
             session = await request_container.get(AsyncSession)
             repo = TransactionRepository(session=session)
@@ -53,15 +61,19 @@ def process_transaction_analysis(transaction_id: UUID):
                 return
 
             try:
-                result = analyze_text()
+                result = predict(model, pd.DataFrame(data={
+                    'Date': [transaction.entry_date.strftime('%d/%m/%Y')],
+                    'Date.1': [transaction.receipt_date.strftime('%d/%m/%Y')],
+                    'Balance': [transaction.balance],
+                    'Withdrawal': [transaction.withdraw],
+                    'Deposit': [transaction.deposit],
+                }))
 
                 oldest_ts_time = await repo.get_oldest_ts(user_id=transaction.user_id)
-                print(oldest_ts_time)
                 # if transaction.withdraw and oldest_ts_time < (datetime.now() - timedelta(days=29)):
-                print('Fimoz cat: ', result['category'])
                 avg = await repo.get_avg_withdrawal_by_category(
                     user_id=transaction.user_id,
-                    category=result['category'],
+                    category=result,
                 )
                 if avg is not None:
                     coef = (transaction.withdraw - avg) / avg
@@ -77,7 +89,7 @@ def process_transaction_analysis(transaction_id: UUID):
                     coef = 0
                 await repo.update_analysis(
                     transaction_id,
-                    category=result["category"],
+                    category=result,
                     status="completed",
                     expediency=coef,
                 )
@@ -92,15 +104,22 @@ def process_transaction_analysis(transaction_id: UUID):
 def process_fit_model():
     print('fitting model..')
     async def inner():
+        model = await container.get(CatBoostClassifier)
         async with container() as request_container:
             session = await request_container.get(AsyncSession)
             repo = TransactionRepository(session=session)
 
             edited = await repo.get_all_edited()
             if len(edited) > 10:
-                # fit_model(edited)
-                pass
-            await repo.drop_edited()
+                fit_model(model, pd.DataFrame(data={
+                    'Date': [ts.entry_date.strftime('%d/%m/%Y') for ts in edited],
+                    'Date.1': [ts.receipt_date.strftime('%d/%m/%Y') for ts in edited],
+                    'Balance': [ts.balance for ts in edited],
+                    'Category': [ts.new_category for ts in edited],
+                    'Withdrawal': [ts.withdraw for ts in edited],
+                    'Deposit': [ts.deposit for ts in edited],
+                }))
+                await repo.drop_edited()
     return run_async(inner())
 
 
@@ -111,5 +130,5 @@ class AIRemoteTransactionAnalyzer:
         TOTAL_MESSAGES_PRODUCED.inc()
 
     def fit_model(self):
-        process_transaction_analysis.delay()
+        process_fit_model.delay()
         TOTAL_MESSAGES_PRODUCED.inc()

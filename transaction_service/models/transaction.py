@@ -18,6 +18,7 @@ class Transaction(Base):
     processing_status = Column(String, default="in_progress") # in_progress, completed
     category = Column(String, nullable=True)
     expediency = Column(INTEGER, nullable=True)
+    balance = Column(DECIMAL, nullable=True)
     created_at = Column(DateTime, default=datetime.now)
 
 
@@ -30,5 +31,6 @@ class EditedTransaction(Base):
     receipt_date = Column(DateTime, default=datetime.now)
     withdraw = Column(DECIMAL, nullable=False)
     deposit = Column(DECIMAL, nullable=False)
+    balance = Column(DECIMAL, nullable=True)
     new_category = Column(String, nullable=True)
-    created_at = Column(DateTime, default=datetime.now)
+    created_at = Column(DateTime, primary_key=True, default=datetime.now)
