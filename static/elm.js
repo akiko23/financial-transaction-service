@@ -7155,7 +7155,7 @@ var $author$project$Main$Withdrawal = {$: 'Withdrawal'};
 var $author$project$Main$decodeTrType = A2(
 	$elm$json$Json$Decode$andThen,
 	function (bool) {
-		return bool ? $elm$json$Json$Decode$succeed($author$project$Main$Withdrawal) : $elm$json$Json$Decode$succeed($author$project$Main$Deposit);
+		return bool ? $elm$json$Json$Decode$succeed($author$project$Main$Deposit) : $elm$json$Json$Decode$succeed($author$project$Main$Withdrawal);
 	},
 	A2(
 		$elm$json$Json$Decode$andThen,
@@ -18637,6 +18637,10 @@ var $author$project$Main$transactionView = F2(
 							A2(
 							$author$project$Main$onEvent,
 							'Enter',
+							$author$project$Main$SendCategory(transaction)),
+							A2(
+							$author$project$Main$onEvent,
+							'E',
 							$author$project$Main$SendCategory(transaction))
 						]),
 					{
