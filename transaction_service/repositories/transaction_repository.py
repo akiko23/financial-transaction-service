@@ -78,14 +78,14 @@ class TransactionRepository:
         res = await self.session.execute(text(
             """
             select avg(withdraw) from transactions
-            where user_id=:user_id and
-            category=:cat and 
+            where user_id = :user_id and
+            category = :cat and 
             entry_date between (now() - interval '1 month') and now()
             """),
             {'user_id': user_id, 'cat': category}
         )
-        print('Fetch res2:', res.fetchone())
-        return res.fetchone()
+        result = res.fetchone()
+        return result[0] if result else None
 
     async def get_oldest_ts(self, user_id: UUID):
         res = await self.session.execute(text(

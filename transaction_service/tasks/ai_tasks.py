@@ -70,6 +70,7 @@ def process_transaction_analysis(transaction_id: UUID):
                 }))
 
                 oldest_ts_time = await repo.get_oldest_ts(user_id=transaction.user_id)
+                print(oldest_ts_time)
                 # if transaction.withdraw and oldest_ts_time < (datetime.now() - timedelta(days=29)):
                 avg = await repo.get_avg_withdrawal_by_category(
                     user_id=transaction.user_id,
@@ -77,6 +78,8 @@ def process_transaction_analysis(transaction_id: UUID):
                 )
                 if avg is not None:
                     coef = (transaction.withdraw - avg) / avg
+
+                    print(f'Coef for ts {transaction.id}:', coef)
                     if coef > 20:
                         coef = 5
                     elif coef > 10:
@@ -102,7 +105,6 @@ def process_transaction_analysis(transaction_id: UUID):
 
 @celery_app.task
 def process_fit_model():
-    print('fitting model..')
     async def inner():
         model = await container.get(CatBoostClassifier)
         async with container() as request_container:
@@ -120,6 +122,33 @@ def process_fit_model():
                     'Deposit': [ts.deposit for ts in edited],
                 }))
                 await repo.drop_edited()
+
+            for transaction in edited:
+                oldest_ts_time = await repo.get_oldest_ts(user_id=transaction.user_id)
+                # if transaction.withdraw and oldest_ts_time < (datetime.now() - timedelta(days=29)):
+                avg = await repo.get_avg_withdrawal_by_category(
+                    user_id=transaction.user_id,
+                    category=transaction.new_category,
+                )
+                if avg is not None:
+                    coef = (transaction.withdraw - avg) / avg
+
+                    if coef > 20:
+                        coef = 5
+                    elif coef > 10:
+                        coef = 3
+                    elif coef > 5:
+                        coef = 2
+                    else:
+                        coef = 1
+                else:
+                    coef = 0
+                await repo.update_analysis(
+                    transaction.id,
+                    category=transaction.new_category,
+                    status="completed",
+                    expediency=coef,
+                )
     return run_async(inner())
 
 
