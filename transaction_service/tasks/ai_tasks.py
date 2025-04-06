@@ -69,13 +69,15 @@ def process_transaction_analysis(transaction_id: UUID):
                     'Deposit': [transaction.deposit],
                 }))
 
-                oldest_ts_time = await repo.get_oldest_ts(user_id=transaction.user_id)
-                print(oldest_ts_time)
+                # oldest_ts_time = await repo.get_oldest_ts(user_id=transaction.user_id)
+                # print(oldest_ts_time)
                 # if transaction.withdraw and oldest_ts_time < (datetime.now() - timedelta(days=29)):
+
                 avg = await repo.get_avg_withdrawal_by_category(
                     user_id=transaction.user_id,
                     category=result,
                 )
+                print(f'Avg for {transaction.user_id} {result}: {avg}')
                 if avg is not None:
                     coef = (transaction.withdraw - avg) / avg
 
