@@ -1,0 +1,211 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Main</title>
+  <script src="elm.js"></script>
+  <style type="text/css">
+	  :root {
+		  --primary-color: #6366f1;
+		  --hover-color: #4f46e5;
+		  --background-light: #f8fafc;
+		  --border-light: #e2e8f0;
+		  --text-dark: #1e293b;
+		  --cell-size: 44px;
+	  }
+
+	  .container {
+		  max-width: 600px;
+		  margin: 0 auto;
+		  padding: 2rem 1rem;
+	  }
+
+	  .elm-datepicker--container {
+		  position: relative;
+		  font-family: 'Inter', system-ui, sans-serif;
+	  }
+
+	  .elm-datepicker--input {
+		  width: 83%;
+		  height: 56px;
+		  border: 2px solid var(--border-light);
+		  border-radius: 12px;
+		  font-size: 20px;
+		  padding: 0 1.5rem;
+		  transition: all 0.2s ease;
+		  background: #FAFAFA;
+		  color: #999999;
+	  }
+
+	  .elm-datepicker--input:focus {
+		  outline: none;
+		  border-color: var(--primary-color);
+	  }
+
+	  .elm-datepicker--picker {
+		  position: absolute;
+		  border: none;
+		  z-index: 10;
+		  background-color: white;
+		  border-radius: 16px;
+		  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+		  padding: 1.5rem;
+		  margin-top: 0.75rem;
+		  min-width: 320px;
+	  }
+
+	  .elm-datepicker--picker-header,
+	  .elm-datepicker--weekdays {
+		  background: var(--background-light);
+		  border-radius: 12px;
+		  padding: 0.75rem;
+	  }
+
+	  .elm-datepicker--picker-header {
+		  display: flex;
+		  align-items: center;
+		  margin-bottom: 1.5rem;
+		  gap: 0.5rem;
+	  }
+
+	  .elm-datepicker--month-container {
+		  flex: 1 1 auto;
+		  display: flex;
+		  flex-direction: column;
+		  gap: 0.25rem;
+	  }
+
+	  .elm-datepicker--month {
+		  font-weight: 600;
+		  color: var(--text-dark);
+		  font-size: 1.25rem;
+		  letter-spacing: -0.01em;
+	  }
+
+	  .elm-datepicker--year {
+		  color: #64748b;
+		  font-size: 0.95rem;
+		  font-weight: 500;
+	  }
+
+	  .elm-datepicker--prev-container,
+	  .elm-datepicker--next-container {
+		  width: 40px;
+		  height: 40px;
+		  display: flex;
+		  align-items: center;
+		  justify-content: center;
+		  border-radius: 10px;
+		  transition: all 0.2s ease;
+		  cursor: pointer;
+	  }
+
+	  .elm-datepicker--prev-container:hover,
+	  .elm-datepicker--next-container:hover {
+		  background: var(--border-light);
+	  }
+
+	  .elm-datepicker--table {
+		  border-spacing: 8px;
+		  border-collapse: separate;
+		  margin: -4px; /* Compensate for border spacing */
+	  }
+
+	  .elm-datepicker--table td {
+		  width: var(--cell-size);
+		  height: var(--cell-size);
+		  text-align: center;
+		  border-radius: 10px;
+		  transition: all 0.2s ease;
+	  }
+
+	  .elm-datepicker--day {
+		  color: var(--text-dark);
+		  font-weight: 500;
+		  font-size: 0.95rem;
+	  }
+
+	  .elm-datepicker--day:hover {
+		  background: var(--background-light);
+		  transform: scale(1.05);
+	  }
+
+	  .elm-datepicker--picked {
+		  background: var(--primary-color) !important;
+		  color: white !important;
+		  font-weight: 600;
+		  transform: scale(1);
+	  }
+
+	  .elm-datepicker--today {
+		  position: relative;
+		  font-weight: 600;
+		  color: var(--primary-color);
+	  }
+
+	  .elm-datepicker--today:after {
+		  content: '';
+		  position: absolute;
+		  bottom: 6px;
+		  left: 50%;
+		  transform: translateX(-50%);
+		  width: 5px;
+		  height: 5px;
+		  background: var(--primary-color);
+		  border-radius: 50%;
+	  }
+
+	  .elm-datepicker--other-month {
+		  color: #94a3b8 !important;
+	  }
+
+	  .elm-datepicker--disabled {
+		  color: #cbd5e1 !important;
+		  cursor: not-allowed;
+	  }
+
+	  /* Weekdays styling */
+	  .elm-datepicker--dow {
+		  color: #64748b;
+		  font-size: 0.9rem;
+		  font-weight: 500;
+		  height: 36px;
+	  }
+
+	  /* Row spacing */
+	  .elm-datepicker--row {
+		  height: 52px;
+	  }
+	  
+	  .skeleton {
+		  background: #eee;
+		  background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+		  border-radius: 5px;
+		  background-size: 200% 100%;
+		  -webkit-animation: 1.5s shine linear infinite;
+          animation: 1.5s shine linear infinite;
+	  }
+
+	  @-webkit-keyframes shine {
+		  to {
+			  background-position-x: -200%;
+		  }
+	  }
+
+	  @keyframes shine {
+		  to {
+			  background-position-x: -200%;
+		  }
+	  }
+  </style>
+</head>
+
+<body>
+	<pre id="elm"></pre>
+	<script>
+		var app = Elm.Main.init({
+			node: document.getElementById('elm')
+		});
+	</script>
+</body>
+</html>
