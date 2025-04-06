@@ -13,6 +13,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
+      db_migrations:
+        condition: service_completed_successfully
 
   ai_analyzer_service:
     build:
@@ -27,6 +29,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
+      db_migrations:
+        condition: service_completed_successfully
 
   db_migrations:
     build:
