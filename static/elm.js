@@ -5725,106 +5725,14 @@ var $elm$core$Task$perform = F2(
 				A2($elm$core$Task$map, toMessage, task)));
 	});
 var $elm$browser$Browser$element = _Browser_element;
-var $author$project$Main$Food = {$: 'Food'};
 var $author$project$Main$GotUUID = function (a) {
 	return {$: 'GotUUID', a: a};
 };
-var $elm$time$Time$Jan = {$: 'Jan'};
 var $author$project$Main$MainTab = {$: 'MainTab'};
 var $author$project$Main$SetDatePicker = function (a) {
 	return {$: 'SetDatePicker', a: a};
 };
-var $author$project$Main$Withdrawal = {$: 'Withdrawal'};
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $justinmimbs$date$Date$RD = function (a) {
-	return {$: 'RD', a: a};
-};
-var $elm$core$Basics$clamp = F3(
-	function (low, high, number) {
-		return (_Utils_cmp(number, low) < 0) ? low : ((_Utils_cmp(number, high) > 0) ? high : number);
-	});
-var $elm$core$Basics$modBy = _Basics_modBy;
-var $elm$core$Basics$neq = _Utils_notEqual;
-var $justinmimbs$date$Date$isLeapYear = function (y) {
-	return ((!A2($elm$core$Basics$modBy, 4, y)) && (!(!A2($elm$core$Basics$modBy, 100, y)))) || (!A2($elm$core$Basics$modBy, 400, y));
-};
-var $justinmimbs$date$Date$daysBeforeMonth = F2(
-	function (y, m) {
-		var leapDays = $justinmimbs$date$Date$isLeapYear(y) ? 1 : 0;
-		switch (m.$) {
-			case 'Jan':
-				return 0;
-			case 'Feb':
-				return 31;
-			case 'Mar':
-				return 59 + leapDays;
-			case 'Apr':
-				return 90 + leapDays;
-			case 'May':
-				return 120 + leapDays;
-			case 'Jun':
-				return 151 + leapDays;
-			case 'Jul':
-				return 181 + leapDays;
-			case 'Aug':
-				return 212 + leapDays;
-			case 'Sep':
-				return 243 + leapDays;
-			case 'Oct':
-				return 273 + leapDays;
-			case 'Nov':
-				return 304 + leapDays;
-			default:
-				return 334 + leapDays;
-		}
-	});
-var $justinmimbs$date$Date$floorDiv = F2(
-	function (a, b) {
-		return $elm$core$Basics$floor(a / b);
-	});
-var $justinmimbs$date$Date$daysBeforeYear = function (y1) {
-	var y = y1 - 1;
-	var leapYears = (A2($justinmimbs$date$Date$floorDiv, y, 4) - A2($justinmimbs$date$Date$floorDiv, y, 100)) + A2($justinmimbs$date$Date$floorDiv, y, 400);
-	return (365 * y) + leapYears;
-};
-var $justinmimbs$date$Date$daysInMonth = F2(
-	function (y, m) {
-		switch (m.$) {
-			case 'Jan':
-				return 31;
-			case 'Feb':
-				return $justinmimbs$date$Date$isLeapYear(y) ? 29 : 28;
-			case 'Mar':
-				return 31;
-			case 'Apr':
-				return 30;
-			case 'May':
-				return 31;
-			case 'Jun':
-				return 30;
-			case 'Jul':
-				return 31;
-			case 'Aug':
-				return 31;
-			case 'Sep':
-				return 30;
-			case 'Oct':
-				return 31;
-			case 'Nov':
-				return 30;
-			default:
-				return 31;
-		}
-	});
-var $justinmimbs$date$Date$fromCalendarDate = F3(
-	function (y, m, d) {
-		return $justinmimbs$date$Date$RD(
-			($justinmimbs$date$Date$daysBeforeYear(y) + A2($justinmimbs$date$Date$daysBeforeMonth, y, m)) + A3(
-				$elm$core$Basics$clamp,
-				1,
-				A2($justinmimbs$date$Date$daysInMonth, y, m),
-				d));
-	});
 var $elm$random$Random$Generate = function (a) {
 	return {$: 'Generate', a: a};
 };
@@ -6056,6 +5964,95 @@ var $CurrySoftware$elm_datepicker$DatePicker$DatePicker = function (a) {
 	return {$: 'DatePicker', a: a};
 };
 var $elm$time$Time$May = {$: 'May'};
+var $justinmimbs$date$Date$RD = function (a) {
+	return {$: 'RD', a: a};
+};
+var $elm$core$Basics$clamp = F3(
+	function (low, high, number) {
+		return (_Utils_cmp(number, low) < 0) ? low : ((_Utils_cmp(number, high) > 0) ? high : number);
+	});
+var $elm$core$Basics$modBy = _Basics_modBy;
+var $elm$core$Basics$neq = _Utils_notEqual;
+var $justinmimbs$date$Date$isLeapYear = function (y) {
+	return ((!A2($elm$core$Basics$modBy, 4, y)) && (!(!A2($elm$core$Basics$modBy, 100, y)))) || (!A2($elm$core$Basics$modBy, 400, y));
+};
+var $justinmimbs$date$Date$daysBeforeMonth = F2(
+	function (y, m) {
+		var leapDays = $justinmimbs$date$Date$isLeapYear(y) ? 1 : 0;
+		switch (m.$) {
+			case 'Jan':
+				return 0;
+			case 'Feb':
+				return 31;
+			case 'Mar':
+				return 59 + leapDays;
+			case 'Apr':
+				return 90 + leapDays;
+			case 'May':
+				return 120 + leapDays;
+			case 'Jun':
+				return 151 + leapDays;
+			case 'Jul':
+				return 181 + leapDays;
+			case 'Aug':
+				return 212 + leapDays;
+			case 'Sep':
+				return 243 + leapDays;
+			case 'Oct':
+				return 273 + leapDays;
+			case 'Nov':
+				return 304 + leapDays;
+			default:
+				return 334 + leapDays;
+		}
+	});
+var $justinmimbs$date$Date$floorDiv = F2(
+	function (a, b) {
+		return $elm$core$Basics$floor(a / b);
+	});
+var $justinmimbs$date$Date$daysBeforeYear = function (y1) {
+	var y = y1 - 1;
+	var leapYears = (A2($justinmimbs$date$Date$floorDiv, y, 4) - A2($justinmimbs$date$Date$floorDiv, y, 100)) + A2($justinmimbs$date$Date$floorDiv, y, 400);
+	return (365 * y) + leapYears;
+};
+var $justinmimbs$date$Date$daysInMonth = F2(
+	function (y, m) {
+		switch (m.$) {
+			case 'Jan':
+				return 31;
+			case 'Feb':
+				return $justinmimbs$date$Date$isLeapYear(y) ? 29 : 28;
+			case 'Mar':
+				return 31;
+			case 'Apr':
+				return 30;
+			case 'May':
+				return 31;
+			case 'Jun':
+				return 30;
+			case 'Jul':
+				return 31;
+			case 'Aug':
+				return 31;
+			case 'Sep':
+				return 30;
+			case 'Oct':
+				return 31;
+			case 'Nov':
+				return 30;
+			default:
+				return 31;
+		}
+	});
+var $justinmimbs$date$Date$fromCalendarDate = F3(
+	function (y, m, d) {
+		return $justinmimbs$date$Date$RD(
+			($justinmimbs$date$Date$daysBeforeYear(y) + A2($justinmimbs$date$Date$daysBeforeMonth, y, m)) + A3(
+				$elm$core$Basics$clamp,
+				1,
+				A2($justinmimbs$date$Date$daysInMonth, y, m),
+				d));
+	});
 var $CurrySoftware$elm_datepicker$DatePicker$Date$initDate = A3($justinmimbs$date$Date$fromCalendarDate, 1992, $elm$time$Time$May, 31);
 var $elm$time$Time$flooredDiv = F2(
 	function (numerator, denominator) {
@@ -6122,6 +6119,7 @@ var $elm$time$Time$Apr = {$: 'Apr'};
 var $elm$time$Time$Aug = {$: 'Aug'};
 var $elm$time$Time$Dec = {$: 'Dec'};
 var $elm$time$Time$Feb = {$: 'Feb'};
+var $elm$time$Time$Jan = {$: 'Jan'};
 var $elm$time$Time$Jul = {$: 'Jul'};
 var $elm$time$Time$Jun = {$: 'Jun'};
 var $elm$time$Time$Mar = {$: 'Mar'};
@@ -6203,36 +6201,7 @@ var $author$project$Main$init = function (_v0) {
 			today: $elm$time$Time$millisToPosix(0),
 			transactionUploadForm: {amount: $elm$core$Maybe$Nothing, balance: $elm$core$Maybe$Nothing, date: $elm$core$Maybe$Nothing, trType: $elm$core$Maybe$Nothing},
 			transactionUploadFormShown: false,
-			transactions: _List_fromArray(
-				[
-					{
-					amount: 500,
-					category: $elm$core$Maybe$Just($author$project$Main$Food),
-					date: A3($justinmimbs$date$Date$fromCalendarDate, 2024, $elm$time$Time$Jan, 24),
-					editCategory: false,
-					expediency: $elm$core$Maybe$Nothing,
-					id: 'asdf',
-					trType: $author$project$Main$Withdrawal
-				},
-					{
-					amount: 500,
-					category: $elm$core$Maybe$Just($author$project$Main$Food),
-					date: A3($justinmimbs$date$Date$fromCalendarDate, 2024, $elm$time$Time$Jan, 24),
-					editCategory: false,
-					expediency: $elm$core$Maybe$Just(0),
-					id: 'uknfs',
-					trType: $author$project$Main$Withdrawal
-				},
-					{
-					amount: 500,
-					category: $elm$core$Maybe$Nothing,
-					date: A3($justinmimbs$date$Date$fromCalendarDate, 2024, $elm$time$Time$Jan, 24),
-					editCategory: false,
-					expediency: $elm$core$Maybe$Just(0),
-					id: 'nfs',
-					trType: $author$project$Main$Withdrawal
-				}
-				]),
+			transactions: _List_Nil,
 			userId: '',
 			zone: $elm$time$Time$utc
 		},
@@ -6348,6 +6317,7 @@ var $author$project$Main$decodeAmount = A2(
 					$elm$core$String$toFloat(string)));
 		},
 		A2($elm$json$Json$Decode$field, 'withdraw', $elm$json$Json$Decode$string)));
+var $author$project$Main$Food = {$: 'Food'};
 var $author$project$Main$Misc = {$: 'Misc'};
 var $author$project$Main$Other = function (a) {
 	return {$: 'Other', a: a};
@@ -7181,6 +7151,7 @@ var $author$project$Main$decodeDate = A2(
 						A2($elm$core$String$split, 'T', str)))));
 	},
 	$elm$json$Json$Decode$string);
+var $author$project$Main$Withdrawal = {$: 'Withdrawal'};
 var $author$project$Main$decodeTrType = A2(
 	$elm$json$Json$Decode$andThen,
 	function (bool) {
@@ -9015,7 +8986,7 @@ var $author$project$Main$sendTransactionPoll = function (transaction) {
 						resolver: $elm$http$Http$stringResolver(
 							$author$project$Main$handleJsonResponse($author$project$Main$decodeTransaction)),
 						timeout: $elm$core$Maybe$Nothing,
-						url: 'http://localhost:8000/api/v1/transactions/' + transaction.id
+						url: '/api/v1/transactions/' + transaction.id
 					});
 			},
 			$elm$core$Process$sleep(1000)));
@@ -9043,7 +9014,7 @@ var $author$project$Main$sendTransactionsPoll = function (model) {
 										['results']),
 									$elm$json$Json$Decode$list($author$project$Main$decodeTransaction)))),
 						timeout: $elm$core$Maybe$Nothing,
-						url: 'http://localhost:8000/api/v1/transactions/?user_id=' + (model.userId + ('&limit=' + '9999'))
+						url: '/api/v1/transactions/?user_id=' + (model.userId + ('&limit=' + '9999'))
 					});
 			},
 			$elm$core$Process$sleep(1000)));
@@ -9401,7 +9372,7 @@ var $author$project$Main$update = F2(
 							body: $elm$http$Http$jsonBody(
 								A3($author$project$Main$encodeTransaction, newTr, model.userId, model.transactionUploadForm.balance)),
 							expect: A2($elm$http$Http$expectJson, $author$project$Main$GotTransaction, $author$project$Main$decodeTransaction),
-							url: 'http://localhost:8000/api/v1/transactions'
+							url: '1/api/v1/transactions'
 						}));
 			case 'PickFile':
 				return _Utils_Tuple2(
@@ -9471,7 +9442,7 @@ var $author$project$Main$update = F2(
 										_List_fromArray(
 											['results']),
 										$elm$json$Json$Decode$list($author$project$Main$decodeTransaction))),
-								url: 'http://localhost:8000/api/v1/transactions/load-account-statement/?bank=' + (model.pdfUploadForm.bank + ('&user_id=' + model.userId))
+								url: '/api/v1/transactions/load-account-statement/?bank=' + (model.pdfUploadForm.bank + ('&user_id=' + model.userId))
 							}));
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
@@ -9677,7 +9648,7 @@ var $author$project$Main$update = F2(
 										method: 'PATCH',
 										timeout: $elm$core$Maybe$Nothing,
 										tracker: $elm$core$Maybe$Nothing,
-										url: 'http://localhost:8000/api/v1/transactions/' + (transaction.id + ('?category=' + $author$project$Main$capitalize(category.name)))
+										url: '/api/v1/transactions/' + (transaction.id + ('?category=' + $author$project$Main$capitalize(category.name)))
 									})
 								])));
 				} else {
@@ -9692,7 +9663,7 @@ var $author$project$Main$update = F2(
 						return $elm$http$Http$get(
 							{
 								expect: A2($elm$http$Http$expectJson, $author$project$Main$GotCushion, $author$project$Main$decodeCushion),
-								url: 'http://localhost:8000/api/v1/transaction/financial-safety-cushion?user_id=' + model.userId
+								url: '/api/v1/transaction/financial-safety-cushion?user_id=' + model.userId
 							});
 					}
 				}();
@@ -15422,8 +15393,6 @@ var $mdgriffith$elm_ui$Internal$Model$Fill = function (a) {
 	return {$: 'Fill', a: a};
 };
 var $mdgriffith$elm_ui$Element$fill = $mdgriffith$elm_ui$Internal$Model$Fill(1);
-var $mdgriffith$elm_ui$Internal$Flag$fontWeight = $mdgriffith$elm_ui$Internal$Flag$flag(13);
-var $mdgriffith$elm_ui$Element$Font$heavy = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.textHeavy);
 var $mdgriffith$elm_ui$Internal$Model$Empty = {$: 'Empty'};
 var $mdgriffith$elm_ui$Element$none = $mdgriffith$elm_ui$Internal$Model$Empty;
 var $mdgriffith$elm_ui$Internal$Model$PaddingStyle = F5(
@@ -15459,6 +15428,8 @@ var $mdgriffith$elm_ui$Element$Border$rounded = function (radius) {
 			'border-radius',
 			$elm$core$String$fromInt(radius) + 'px'));
 };
+var $mdgriffith$elm_ui$Internal$Flag$fontWeight = $mdgriffith$elm_ui$Internal$Flag$flag(13);
+var $mdgriffith$elm_ui$Element$Font$semiBold = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.textSemiBold);
 var $mdgriffith$elm_ui$Internal$Model$FontSize = function (a) {
 	return {$: 'FontSize', a: a};
 };
@@ -15534,7 +15505,7 @@ var $author$project$Main$graphicsTabView = function (model) {
 										_List_fromArray(
 											[
 												$mdgriffith$elm_ui$Element$Font$size(24),
-												$mdgriffith$elm_ui$Element$Font$heavy
+												$mdgriffith$elm_ui$Element$Font$semiBold
 											]),
 										$mdgriffith$elm_ui$Element$text('Safety cushion')),
 										A2(
@@ -15825,13 +15796,23 @@ var $mdgriffith$elm_ui$Element$createNearby = F2(
 var $mdgriffith$elm_ui$Element$below = function (element) {
 	return A2($mdgriffith$elm_ui$Element$createNearby, $mdgriffith$elm_ui$Internal$Model$Below, element);
 };
-var $mdgriffith$elm_ui$Internal$Model$MoveX = function (a) {
-	return {$: 'MoveX', a: a};
+var $mdgriffith$elm_ui$Internal$Model$MoveY = function (a) {
+	return {$: 'MoveY', a: a};
 };
 var $mdgriffith$elm_ui$Internal$Model$TransformComponent = F2(
 	function (a, b) {
 		return {$: 'TransformComponent', a: a, b: b};
 	});
+var $mdgriffith$elm_ui$Internal$Flag$moveY = $mdgriffith$elm_ui$Internal$Flag$flag(26);
+var $mdgriffith$elm_ui$Element$moveDown = function (y) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$TransformComponent,
+		$mdgriffith$elm_ui$Internal$Flag$moveY,
+		$mdgriffith$elm_ui$Internal$Model$MoveY(y));
+};
+var $mdgriffith$elm_ui$Internal$Model$MoveX = function (a) {
+	return {$: 'MoveX', a: a};
+};
 var $mdgriffith$elm_ui$Internal$Flag$moveX = $mdgriffith$elm_ui$Internal$Flag$flag(25);
 var $mdgriffith$elm_ui$Element$moveLeft = function (x) {
 	return A2(
@@ -16569,10 +16550,6 @@ var $mdgriffith$elm_ui$Internal$Model$Behind = {$: 'Behind'};
 var $mdgriffith$elm_ui$Element$behindContent = function (element) {
 	return A2($mdgriffith$elm_ui$Element$createNearby, $mdgriffith$elm_ui$Internal$Model$Behind, element);
 };
-var $mdgriffith$elm_ui$Internal$Model$MoveY = function (a) {
-	return {$: 'MoveY', a: a};
-};
-var $mdgriffith$elm_ui$Internal$Flag$moveY = $mdgriffith$elm_ui$Internal$Flag$flag(26);
 var $mdgriffith$elm_ui$Element$moveUp = function (y) {
 	return A2(
 		$mdgriffith$elm_ui$Internal$Model$TransformComponent,
@@ -18491,7 +18468,8 @@ var $author$project$Main$drawCategory = function (category) {
 							$mdgriffith$elm_ui$Element$alignRight,
 							$mdgriffith$elm_ui$Element$Font$size(40)
 						]),
-					$mdgriffith$elm_ui$Element$text(catPresentation.name))
+					$mdgriffith$elm_ui$Element$text(
+						$author$project$Main$capitalize(catPresentation.name)))
 				]));
 	} else {
 		return A2(
@@ -18688,7 +18666,10 @@ var $author$project$Main$mainTabView = function (model) {
 									$mdgriffith$elm_ui$Element$below(
 									A2(
 										$mdgriffith$elm_ui$Element$el,
-										_List_Nil,
+										_List_fromArray(
+											[
+												$mdgriffith$elm_ui$Element$moveDown(10)
+											]),
 										model.transactionUploadFormShown ? $author$project$Main$transactionUploadFormView(model) : $mdgriffith$elm_ui$Element$none))
 								]),
 							A2(
@@ -18715,7 +18696,10 @@ var $author$project$Main$mainTabView = function (model) {
 									$mdgriffith$elm_ui$Element$below(
 									A2(
 										$mdgriffith$elm_ui$Element$el,
-										_List_Nil,
+										_List_fromArray(
+											[
+												$mdgriffith$elm_ui$Element$moveDown(10)
+											]),
 										model.pdfUploadFormShown ? $author$project$Main$pdfUploadFormView(model) : $mdgriffith$elm_ui$Element$none))
 								]),
 							A2(
