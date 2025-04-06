@@ -18383,38 +18383,6 @@ var $author$project$Main$transactionUploadFormView = function (model) {
 						}()
 					}),
 					A2(
-					$mdgriffith$elm_ui$Element$Input$text,
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-							$mdgriffith$elm_ui$Element$height(
-							$mdgriffith$elm_ui$Element$px(50)),
-							$mdgriffith$elm_ui$Element$Background$color(
-							A3($mdgriffith$elm_ui$Element$rgb255, 250, 250, 250)),
-							$mdgriffith$elm_ui$Element$Border$color(
-							A3($mdgriffith$elm_ui$Element$rgb255, 230, 230, 230)),
-							$mdgriffith$elm_ui$Element$Border$width(2),
-							$mdgriffith$elm_ui$Element$Border$rounded(12)
-						]),
-					{
-						label: $mdgriffith$elm_ui$Element$Input$labelHidden('Balance'),
-						onChange: $author$project$Main$UpdateBalance,
-						placeholder: $elm$core$Maybe$Just(
-							A2(
-								$mdgriffith$elm_ui$Element$Input$placeholder,
-								_List_Nil,
-								$mdgriffith$elm_ui$Element$text('Balance'))),
-						text: function () {
-							var _v1 = model.transactionUploadForm.balance;
-							if (_v1.$ === 'Just') {
-								var balance = _v1.a;
-								return $elm$core$String$fromFloat(balance);
-							} else {
-								return '';
-							}
-						}()
-					}),
-					A2(
 					$mdgriffith$elm_ui$Element$Input$radio,
 					_List_fromArray(
 						[
@@ -18435,6 +18403,38 @@ var $author$project$Main$transactionUploadFormView = function (model) {
 								$mdgriffith$elm_ui$Element$text('Withdrawal'))
 							]),
 						selected: model.transactionUploadForm.trType
+					}),
+					A2(
+					$mdgriffith$elm_ui$Element$Input$text,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+							$mdgriffith$elm_ui$Element$height(
+							$mdgriffith$elm_ui$Element$px(50)),
+							$mdgriffith$elm_ui$Element$Background$color(
+							A3($mdgriffith$elm_ui$Element$rgb255, 250, 250, 250)),
+							$mdgriffith$elm_ui$Element$Border$color(
+							A3($mdgriffith$elm_ui$Element$rgb255, 230, 230, 230)),
+							$mdgriffith$elm_ui$Element$Border$width(2),
+							$mdgriffith$elm_ui$Element$Border$rounded(12)
+						]),
+					{
+						label: $mdgriffith$elm_ui$Element$Input$labelHidden('Balance after transaction'),
+						onChange: $author$project$Main$UpdateBalance,
+						placeholder: $elm$core$Maybe$Just(
+							A2(
+								$mdgriffith$elm_ui$Element$Input$placeholder,
+								_List_Nil,
+								$mdgriffith$elm_ui$Element$text('Balance'))),
+						text: function () {
+							var _v1 = model.transactionUploadForm.balance;
+							if (_v1.$ === 'Just') {
+								var balance = _v1.a;
+								return $elm$core$String$fromFloat(balance);
+							} else {
+								return '';
+							}
+						}()
 					}),
 					A2(
 					$mdgriffith$elm_ui$Element$Input$button,
