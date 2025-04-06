@@ -87,19 +87,22 @@ async def update_transaction_category(
     res = await service.update_ts_category(transaction_id, category)
     return res
 
-@router.get('/transactions/financial-safety-cushion')
+@router.get('/transaction/financial-safety-cushion')
 async def get_financial_safety_cushion(
         user_id: Annotated[UUID, Query(...)],
         service: FromDishka[TransactionService]
-) -> tuple[float, float]:
+):
+    print("FAKSFKASKFAKFKAFKASFKASKFASKFKASFKASKAKFASK ....")
+
     res = await service.get_financial_safety_cushion(user_id=user_id)
     return res
 
 
-@router.get('/transactions/get-categories-data')
+@router.get('/transaction/get-categories-data')
 async def get_financial_safety_cushion(
         user_id: Annotated[UUID, Query(...)],
         service: FromDishka[TransactionService]
-) -> tuple[dict[str], int]:
+):
+    print("FAKSFKASKFAKFKAFKASFKASKFASKFKASFKASKAKFASK ...")
     res = await service.get_categories_data(user_id=user_id)
     return res
