@@ -78,7 +78,7 @@ def process_transaction_analysis(transaction_id: UUID):
                     category=result,
                 )
                 print(f'Avg for {transaction.user_id} {result}: {avg}')
-                if avg is not None:
+                if (result != 'Salary') and (avg is not None):
                     coef = (transaction.withdraw - avg) / avg
 
                     print(f'Coef for ts {transaction.id}:', coef)
@@ -132,7 +132,7 @@ def process_fit_model():
                     user_id=transaction.user_id,
                     category=transaction.new_category,
                 )
-                if avg is not None:
+                if (transaction.new_category != 'Salary') and (avg is not None):
                     coef = (transaction.withdraw - avg) / avg
 
                     if coef > 20:
