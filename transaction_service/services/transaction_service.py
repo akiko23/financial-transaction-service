@@ -127,6 +127,21 @@ class TransactionService:
             results=[TransactionResponse.model_validate(ts) for ts in transactions],
         )
 
+    async def get_categories_data(self, user_id: UUID):
+        transactions, total = await self.repository.get_all(
+            user_id=user_id,
+            limit=10_000_000
+        )
+        res = {}
+        for ts in transactions:
+            if not res.get(ts.category):
+                res[ts.category] = 1
+            else:
+                res[ts.category] += 1
+
+        return res, total
+
+
     def _parse_account_stmt(self, pdf_content: bytes, user_id: UUID, bank: str):
         if bank == 'tbank':
             with BytesIO(pdf_content) as pdf_file:  # noqa
@@ -193,7 +208,7 @@ class TransactionService:
 
         raise NotImplementedError
 
-    async def get_financial_safety_cushion(self, user_id: UUID) -> tuple[int, int]:
+    async def get_financial_safety_cushion(self, user_id: UUID) -> tuple[float, float]:
         avg_withdrawal = await self.repository.get_avg_withdrawal_by_user(user_id)
         last_balance = await self.repository.get_user_current_balance(user_id)
         if not (last_balance and avg_withdrawal):
