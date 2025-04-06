@@ -44,3 +44,11 @@ def create_app(ioc_container: AsyncContainer):
 
 container = setup_di()
 app = create_app(container)
+
+# frontend
+app.mount('/static', StaticFiles(directory='static'), name='static')
+templates = Jinja2Templates(directory="static/")
+
+@app.get("/", response_class=HTMLResponse)
+async def login_page(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})

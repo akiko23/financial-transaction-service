@@ -92,8 +92,6 @@ async def get_financial_safety_cushion(
         user_id: Annotated[UUID, Query(...)],
         service: FromDishka[TransactionService]
 ):
-    print("FAKSFKASKFAKFKAFKASFKASKFASKFKASFKASKAKFASK ....")
-
     res = await service.get_financial_safety_cushion(user_id=user_id)
     return res
 
@@ -103,6 +101,6 @@ async def get_financial_safety_cushion(
         user_id: Annotated[UUID, Query(...)],
         service: FromDishka[TransactionService]
 ):
-    print("FAKSFKASKFAKFKAFKASFKASKFASKFKASFKASKAKFASK ...")
     res = await service.get_categories_data(user_id=user_id)
     return res
+
