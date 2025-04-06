@@ -15413,6 +15413,44 @@ var $mdgriffith$elm_ui$Element$padding = function (x) {
 			f,
 			f));
 };
+var $mdgriffith$elm_ui$Internal$Model$Paragraph = {$: 'Paragraph'};
+var $mdgriffith$elm_ui$Internal$Model$SpacingStyle = F3(
+	function (a, b, c) {
+		return {$: 'SpacingStyle', a: a, b: b, c: c};
+	});
+var $mdgriffith$elm_ui$Internal$Flag$spacing = $mdgriffith$elm_ui$Internal$Flag$flag(3);
+var $mdgriffith$elm_ui$Internal$Model$spacingName = F2(
+	function (x, y) {
+		return 'spacing-' + ($elm$core$String$fromInt(x) + ('-' + $elm$core$String$fromInt(y)));
+	});
+var $mdgriffith$elm_ui$Element$spacing = function (x) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$spacing,
+		A3(
+			$mdgriffith$elm_ui$Internal$Model$SpacingStyle,
+			A2($mdgriffith$elm_ui$Internal$Model$spacingName, x, x),
+			x,
+			x));
+};
+var $mdgriffith$elm_ui$Element$paragraph = F2(
+	function (attrs, children) {
+		return A4(
+			$mdgriffith$elm_ui$Internal$Model$element,
+			$mdgriffith$elm_ui$Internal$Model$asParagraph,
+			$mdgriffith$elm_ui$Internal$Model$div,
+			A2(
+				$elm$core$List$cons,
+				$mdgriffith$elm_ui$Internal$Model$Describe($mdgriffith$elm_ui$Internal$Model$Paragraph),
+				A2(
+					$elm$core$List$cons,
+					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+					A2(
+						$elm$core$List$cons,
+						$mdgriffith$elm_ui$Element$spacing(5),
+						attrs))),
+			$mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
+	});
 var $mdgriffith$elm_ui$Internal$Model$Px = function (a) {
 	return {$: 'Px', a: a};
 };
@@ -15439,25 +15477,6 @@ var $mdgriffith$elm_ui$Element$Font$size = function (i) {
 		$mdgriffith$elm_ui$Internal$Model$StyleClass,
 		$mdgriffith$elm_ui$Internal$Flag$fontSize,
 		$mdgriffith$elm_ui$Internal$Model$FontSize(i));
-};
-var $mdgriffith$elm_ui$Internal$Model$SpacingStyle = F3(
-	function (a, b, c) {
-		return {$: 'SpacingStyle', a: a, b: b, c: c};
-	});
-var $mdgriffith$elm_ui$Internal$Flag$spacing = $mdgriffith$elm_ui$Internal$Flag$flag(3);
-var $mdgriffith$elm_ui$Internal$Model$spacingName = F2(
-	function (x, y) {
-		return 'spacing-' + ($elm$core$String$fromInt(x) + ('-' + $elm$core$String$fromInt(y)));
-	});
-var $mdgriffith$elm_ui$Element$spacing = function (x) {
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$spacing,
-		A3(
-			$mdgriffith$elm_ui$Internal$Model$SpacingStyle,
-			A2($mdgriffith$elm_ui$Internal$Model$spacingName, x, x),
-			x,
-			x));
 };
 var $mdgriffith$elm_ui$Internal$Model$Text = function (a) {
 	return {$: 'Text', a: a};
@@ -15509,18 +15528,22 @@ var $author$project$Main$graphicsTabView = function (model) {
 											]),
 										$mdgriffith$elm_ui$Element$text('Safety cushion')),
 										A2(
-										$mdgriffith$elm_ui$Element$el,
+										$mdgriffith$elm_ui$Element$paragraph,
 										_List_Nil,
-										$mdgriffith$elm_ui$Element$text(
-											function () {
-												if (!(safetyCushion.lastBalance + safetyCushion.avgPayment)) {
-													return 'Not enough data to calculate Safety Cushion.';
-												} else {
-													var diff = $author$project$Main$countCushion(safetyCushion);
-													return (diff < 0) ? ('You spending too much money. You need' + ($elm$core$String$fromFloat(
-														$elm$core$Basics$abs(diff)) + 'more to be safe.')) : 'Your safety cushion is great!';
-												}
-											}()))
+										_List_fromArray(
+											[
+												$mdgriffith$elm_ui$Element$text(
+												function () {
+													if (!(safetyCushion.lastBalance + safetyCushion.avgPayment)) {
+														return 'Not enough data to calculate Safety Cushion.';
+													} else {
+														var diff = $author$project$Main$countCushion(safetyCushion);
+														return (diff < 0) ? ('You spending too much money. You need ' + ($elm$core$String$fromInt(
+															$elm$core$Basics$round(
+																$elm$core$Basics$abs(diff))) + ' more to be safe.')) : 'Your safety cushion is great!';
+													}
+												}())
+											]))
 									]));
 						} else {
 							return $mdgriffith$elm_ui$Element$none;
@@ -18443,6 +18466,20 @@ var $elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
 var $elm$svg$Svg$circle = $elm$svg$Svg$trustedNode('circle');
 var $elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
 var $elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
+var $author$project$Main$drawIcon = F2(
+	function (name, size) {
+		return $mdgriffith$elm_ui$Element$html(
+			A2(
+				$elm$html$Html$span,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('material-symbols-outlined')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text(name)
+					])));
+	});
 var $author$project$Main$drawCategory = function (category) {
 	if (category.$ === 'Just') {
 		var cat = category.a;
@@ -18459,7 +18496,7 @@ var $author$project$Main$drawCategory = function (category) {
 					$mdgriffith$elm_ui$Element$el,
 					_List_fromArray(
 						[$mdgriffith$elm_ui$Element$alignTop, $mdgriffith$elm_ui$Element$alignRight]),
-					$mdgriffith$elm_ui$Element$text(catPresentation.icon)),
+					A2($author$project$Main$drawIcon, catPresentation.name, 24)),
 					A2(
 					$mdgriffith$elm_ui$Element$el,
 					_List_fromArray(
@@ -18637,11 +18674,7 @@ var $author$project$Main$transactionView = F2(
 							A2(
 							$author$project$Main$onEvent,
 							'Enter',
-							$author$project$Main$SendCategory(transaction)),
-							A2(
-							$author$project$Main$onEvent,
-							'Escape',
-							$author$project$Main$ToggleEdit(transaction))
+							$author$project$Main$SendCategory(transaction))
 						]),
 					{
 						label: $mdgriffith$elm_ui$Element$Input$labelHidden(''),
