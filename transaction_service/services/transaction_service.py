@@ -94,7 +94,10 @@ class TransactionService:
 
         return ManyTransactionsResponse(
             total=len(dict_transactions),
-            results=[TransactionResponse.model_validate(ts) for ts in dict_transactions],
+            results=reversed(sorted(
+                [TransactionResponse.model_validate(ts) for ts in dict_transactions],
+                key=lambda t: t.receipt_date
+            )),
         )
 
     async def get_transactions_by_user_id(
