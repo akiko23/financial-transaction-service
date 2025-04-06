@@ -3,7 +3,7 @@ from typing import Optional
 from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func, text, delete
+from sqlalchemy import select, func, text, delete, desc
 
 from transaction_service.models.transaction import Transaction, EditedTransaction
 from transaction_service.schemas.transaction import TransactionCreate
@@ -86,6 +86,24 @@ class TransactionRepository:
         )
         result = res.fetchone()
         return result[0] if result else None
+
+    async def get_avg_withdrawal_by_user(self, user_id: UUID):
+        res = await self.session.execute(text(
+            """
+            select avg(withdraw) from transactions
+            where user_id = :user_id and
+            entry_date between (now() - interval '3 month') and now()
+            """),
+            {'user_id': user_id}
+        )
+        result = res.fetchone()
+        return result[0] if result else None
+
+    async def get_user_current_balance(self, user_id: UUID):
+        res = await self.session.execute(select(Transaction).where(Transaction.user_id == user_id).order_by(desc(Transaction.receipt_date)).limit(1))
+        last_ts = res.scalar_one_or_none()
+        if last_ts:
+            return last_ts.balance
 
     async def get_oldest_ts(self, user_id: UUID):
         res = await self.session.execute(text(

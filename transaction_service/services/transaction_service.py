@@ -52,6 +52,12 @@ class TransactionGateway(Protocol):
     async def get_all_edited(self):
         raise NotImplementedError
 
+    async def get_avg_withdrawal_by_user(self, user_id: UUID):
+        raise NotImplementedError
+
+    async def get_user_current_balance(self, user_id: UUID):
+        raise NotImplementedError
+
 
 class TransactionAnalyzer(Protocol):
     def analyze(self, transaction_id: UUID):
@@ -186,6 +192,15 @@ class TransactionService:
             return res
 
         raise NotImplementedError
+
+    async def get_financial_safety_cushion(self, user_id: UUID) -> tuple[int, int]:
+        avg_withdrawal = await self.repository.get_avg_withdrawal_by_user(user_id)
+        last_balance = await self.repository.get_user_current_balance(user_id)
+        if not (last_balance and avg_withdrawal):
+            return 0, 0
+
+        return last_balance, avg_withdrawal * 3
+
 
     async def update_ts_category(self, transaction_id: UUID, category: str):
         ts = await self.repository.get(transaction_id)

@@ -86,3 +86,11 @@ async def update_transaction_category(
 ):
     res = await service.update_ts_category(transaction_id, category)
     return res
+
+@router.get('/transaction/financial-safety-cushion')
+async def get_financial_safety_cushion(
+        user_id: Annotated[UUID, Query(...)],
+        service: FromDishka[TransactionService]
+):
+    res = await service.get_financial_safety_cushion(user_id=user_id)
+    return res
