@@ -18640,8 +18640,8 @@ var $author$project$Main$transactionView = F2(
 							$author$project$Main$SendCategory(transaction)),
 							A2(
 							$author$project$Main$onEvent,
-							'E',
-							$author$project$Main$SendCategory(transaction))
+							'Escape',
+							$author$project$Main$ToggleEdit(transaction))
 						]),
 					{
 						label: $mdgriffith$elm_ui$Element$Input$labelHidden(''),
