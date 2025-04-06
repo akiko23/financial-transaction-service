@@ -18605,7 +18605,16 @@ var $author$project$Main$transactionView = F2(
 									$mdgriffith$elm_ui$Element$Font$size(78)
 								]),
 							$mdgriffith$elm_ui$Element$text(
-								$elm$core$String$fromFloat(transaction.amount)))
+								_Utils_ap(
+									function () {
+										var _v0 = transaction.trType;
+										if (_v0.$ === 'Deposit') {
+											return '+';
+										} else {
+											return '-';
+										}
+									}(),
+									$elm$core$String$fromFloat(transaction.amount))))
 						])),
 					(!transaction.editCategory) ? A2(
 					$mdgriffith$elm_ui$Element$Input$button,
