@@ -227,7 +227,7 @@ class TransactionService:
             user_id=ts.user_id,
             category=ts.category,
         )
-        if avg is not None:
+        if (category != 'Salary') and (avg is not None) and avg != 0:
             coef = (ts.withdraw - avg) / avg
             if coef > 20:
                 coef = 5

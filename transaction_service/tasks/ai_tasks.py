@@ -132,7 +132,7 @@ def process_fit_model():
                     user_id=transaction.user_id,
                     category=transaction.new_category,
                 )
-                if (transaction.new_category != 'Salary') and (avg is not None):
+                if (transaction.new_category != 'Salary') and (avg is not None) and avg != 0:
                     coef = (transaction.withdraw - avg) / avg
 
                     if coef > 20:
