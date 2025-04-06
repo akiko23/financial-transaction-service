@@ -9372,7 +9372,7 @@ var $author$project$Main$update = F2(
 							body: $elm$http$Http$jsonBody(
 								A3($author$project$Main$encodeTransaction, newTr, model.userId, model.transactionUploadForm.balance)),
 							expect: A2($elm$http$Http$expectJson, $author$project$Main$GotTransaction, $author$project$Main$decodeTransaction),
-							url: '1/api/v1/transactions'
+							url: '/api/v1/transactions'
 						}));
 			case 'PickFile':
 				return _Utils_Tuple2(
